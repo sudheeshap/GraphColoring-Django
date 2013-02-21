@@ -27,20 +27,23 @@ board.onmousedown = function(e) {
   }
   if(tool=="edge"){
     for(var i=0;i<node_set.length;i++){
-      var n_x = node_set[i].x;
-      var n_y = node_set[i].y;
+      var n_x = node_set[i].x, n_y = node_set[i].y;
         if(!adj_list[i+1]){
           adj_list[i+1] = [];
         }
         if(x <= n_x+10 && x >= n_x-10 && y <= n_y+10 && y >= n_y-10){
           if(!edge_started){
+            s_x = n_x, s_y = n_y;
+            glitter(s_x, s_y);
             ctx.beginPath();
             ctx.moveTo(n_x, n_y);
             edge_started = true;
             bgn_vertex = i+1;
+            
           }
           else{
             draw_edge(n_x, n_y);
+            glitter(s_x, s_y);
             edge_started = false;
             adj_list[bgn_vertex].push(node_set[i]["id"]);
             adj_list[node_set[i].id].push(node_set[bgn_vertex-1]["id"]);
@@ -48,8 +51,23 @@ board.onmousedown = function(e) {
         }
       }
     }
- }
-     
+ } 
+
+function glitter(x, y){
+  if(!edge_started){
+    ctx.fillStyle = "#aaaaaa"
+  }
+  else{
+    ctx.fillStyle = "#000000"
+  }
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.arc(x, y, 10, 0 , 2 * Math.PI, false);
+  ctx.fill();
+  ctx.closePath();
+
+}
+
 function draw_edge(e_x, e_y){
   ctx.lineTo(e_x, e_y);
   ctx.stroke();
